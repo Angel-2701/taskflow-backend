@@ -38,7 +38,6 @@ public class JwtFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
             }
         } catch (Exception e) {
             System.err.println("Fallo crítico en validación de token: " + e.getMessage());
