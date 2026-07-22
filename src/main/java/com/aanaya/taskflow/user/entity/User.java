@@ -1,4 +1,4 @@
-package com.aanaya.taskflow.user;
+package com.aanaya.taskflow.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.aanaya.taskflow.user.repository;
 
-import com.aanaya.taskflow.user.User;
+import com.aanaya.taskflow.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

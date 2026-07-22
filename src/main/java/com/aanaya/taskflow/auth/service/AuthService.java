@@ -1,30 +1,37 @@
 package com.aanaya.taskflow.auth.service;
 
 import com.aanaya.taskflow.auth.dto.LoginRequest;
-import com.aanaya.taskflow.user.User;
-import com.aanaya.taskflow.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aanaya.taskflow.security.jwt.JwtService;
+import com.aanaya.taskflow.security.user.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthService(JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
 
     public ResponseEntity<String> login(LoginRequest loginRequest) {
-        User user = userRepository
-                .findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid Credentials"));
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid Credentials");
-        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        String token = "token";
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+
+        String token = jwtService.generateToken(userDetails.getUserId());
 
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
