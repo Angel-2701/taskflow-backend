@@ -5,6 +5,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -52,5 +54,25 @@ public class CustomUserDetails implements UserDetails {
 
     public Long getUserId() {
         return user.getId();
+    }
+
+    public String getFirstName() {
+        return user.getFirstName();
+    }
+
+    public String getLastName() {
+        return user.getFirstName();
+    }
+
+    public String getRole() {
+        return user.getRole();
+    }
+
+    public Instant getCreatedAt() {
+        return user.getCreatedAt();
+    }
+
+    public Instant getUpdatedAt() {
+        return user.getUpdatedAt();
     }
 }

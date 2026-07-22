@@ -2,14 +2,13 @@ package com.aanaya.taskflow.auth.controller;
 
 import com.aanaya.taskflow.auth.dto.LoginRequest;
 import com.aanaya.taskflow.auth.service.AuthService;
+import com.aanaya.taskflow.user.dto.UserResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("api/v1/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -21,5 +20,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+        return authService.getCurrentUser(authentication);
     }
 }
