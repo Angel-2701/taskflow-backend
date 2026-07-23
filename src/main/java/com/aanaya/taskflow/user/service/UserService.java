@@ -5,8 +5,6 @@ import com.aanaya.taskflow.user.dto.UserDTO;
 import com.aanaya.taskflow.user.dto.UserResponseDTO;
 import com.aanaya.taskflow.user.entity.User;
 import com.aanaya.taskflow.user.repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<String> save(UserDTO userDTO) {
+    public UserResponseDTO save(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new EmailAlreadyExistsException(
                     "Email already registered"
@@ -35,12 +33,20 @@ public class UserService {
         user.setLastName(userDTO.getLastName());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        userRepository.save(user);
-        return new ResponseEntity<>("created", HttpStatus.CREATED);
+        User userCreated = userRepository.save(user);
+        return new UserResponseDTO(
+                userCreated.getId(),
+                userCreated.getEmail(),
+                userCreated.getFirstName(),
+                userCreated.getLastName(),
+                userCreated.getRole(),
+                userCreated.getCreatedAt(),
+                userCreated.getUpdatedAt()
+        );
     }
 
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> allUsersDTO = userRepository.findAll().stream()
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
                         user.getEmail(),
@@ -51,6 +57,5 @@ public class UserService {
                         user.getUpdatedAt()
                 ))
                 .toList();
-        return new ResponseEntity<>(allUsersDTO, HttpStatus.OK);
     }
 }

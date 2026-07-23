@@ -1,5 +1,6 @@
 package com.aanaya.taskflow.auth.controller;
 
+import com.aanaya.taskflow.auth.dto.AuthResponse;
 import com.aanaya.taskflow.auth.dto.LoginRequest;
 import com.aanaya.taskflow.auth.service.AuthService;
 import com.aanaya.taskflow.user.dto.UserResponseDTO;
@@ -18,12 +19,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
-        return authService.getCurrentUser(authentication);
+        return ResponseEntity.ok(authService.getCurrentUser(authentication));
     }
 }
