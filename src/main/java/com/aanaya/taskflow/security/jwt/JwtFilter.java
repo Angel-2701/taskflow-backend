@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +21,8 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final CustomUserDetailsService userService;
+    private static final Logger logger =
+            LoggerFactory.getLogger(JwtFilter.class);
 
     public JwtFilter(JwtService jwtService, CustomUserDetailsService userService) {
         this.jwtService = jwtService;
@@ -40,14 +44,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            System.err.println("Fallo crítico en validación de token: " + e.getMessage());
-            e.printStackTrace();
-            return;
+            logger.error("Error processing JWT authentication", e);
         }
 
         filterChain.doFilter(request, response);
-
-
     }
 
     private String getToken(HttpServletRequest request) {

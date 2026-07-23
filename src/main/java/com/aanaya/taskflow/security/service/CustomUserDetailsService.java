@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserById(Long userId) throws UsernameNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with Id: " + userId));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
         return new CustomUserDetails(user);
     }
