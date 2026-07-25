@@ -4,6 +4,7 @@ import com.aanaya.taskflow.auth.dto.AuthResponse;
 import com.aanaya.taskflow.auth.dto.LoginRequest;
 import com.aanaya.taskflow.auth.service.AuthService;
 import com.aanaya.taskflow.user.dto.UserResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 

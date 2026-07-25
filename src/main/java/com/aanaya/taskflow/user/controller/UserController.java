@@ -3,6 +3,7 @@ package com.aanaya.taskflow.user.controller;
 import com.aanaya.taskflow.user.dto.UserDTO;
 import com.aanaya.taskflow.user.dto.UserResponseDTO;
 import com.aanaya.taskflow.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(userService.save(userDTO), HttpStatus.CREATED);
     }
 
