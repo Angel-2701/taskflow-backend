@@ -1,5 +1,6 @@
 package com.aanaya.taskflow.security.config;
 
+import com.aanaya.taskflow.security.JwtAuthenticationEntryPoint;
 import com.aanaya.taskflow.security.jwt.JwtFilter;
 import com.aanaya.taskflow.security.jwt.JwtService;
 import com.aanaya.taskflow.security.service.CustomUserDetailsService;
@@ -24,13 +25,16 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     public SecurityConfig(CustomUserDetailsService userDetailsService,
                           PasswordEncoder passwordEncoder,
-                          JwtService jwtService) {
+                          JwtService jwtService,
+                          JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -54,6 +58,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(
+                        exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
